@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ranking Table</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.min.js" integrity="sha512-Y8iWYJDo6HiTo5xtml1g4QqHtl/PO1w+dmUpQfQSOTqKNsMhExfyPN2ncNAe9JuJUSKzwK/b6oaNPop4MXzkwg==" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+    <div id="csv-display"></div>
+  </body>
+    <script>
+        var data;
+        $.ajax({
+        type: "GET",  
+        url: "./rank.csv",
+        dataType: "text",       
+        success: function(response)  
+        {
+            data = $.csv.toArrays(response);
+            generateHtmlTable(data);
+        }   
+        });
+
+        function generateHtmlTable(data) {
+            var html = '<table  class="table table-condensed table-hover table-striped">';
+
+            if(typeof(data[0]) === 'undefined') {
+                return null;
+            } else {
+                $.each(data, function(index, row) {
+                    //bind header
+                    if(index == 0) {
+                        html += '<thead>';
+                        html += '<tr>';
+                        $.each(row, function(index, colData) {
+                            html += '<th>';
+                            html += colData;
+                            html += '</th>';
+                        });
+                        html += '</tr>';
+                        html += '</thead>';
+                        html += '<tbody>';
+                    } else {
+                        html += '<tr>';
+                        $.each(row, function(index, colData) {
+                            html += '<td>';
+                            html += colData;
+                            html += '</td>';
+                        });
+                        html += '</tr>';
+                    }
+                });
+                html += '</tbody>';
+                html += '</table>';
+                alert(html);
+                $('#csv-display').append(html);
+            }
+        }	
+    </script>
+</html> 
